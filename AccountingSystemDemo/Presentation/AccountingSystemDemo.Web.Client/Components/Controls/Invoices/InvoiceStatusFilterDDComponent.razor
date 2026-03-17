@@ -1,0 +1,21 @@
+﻿<div class="d-flex align-items-center">
+    <label class="fw-bold me-2 text-nowrap">Filter By Invoice Status:</label>
+    <select class="form-select" style="width: 150px" @onchange="OnStatusChanged">
+        <option value="">All</option>
+        @foreach (var invoiceStatus in Enum.GetNames(typeof(InvoiceStatusEnum)))
+        {
+            <option value="@invoiceStatus">@invoiceStatus</option>
+        }
+    </select>
+</div>
+
+@code {
+    [Parameter] 
+    public string FilterStatus { get; set; } = string.Empty;
+    
+    [Parameter] 
+    public EventCallback<string> FilterStatusChanged { get; set; }
+
+    private async Task OnStatusChanged(ChangeEventArgs e) =>
+        await FilterStatusChanged.InvokeAsync(e.Value?.ToString());
+}

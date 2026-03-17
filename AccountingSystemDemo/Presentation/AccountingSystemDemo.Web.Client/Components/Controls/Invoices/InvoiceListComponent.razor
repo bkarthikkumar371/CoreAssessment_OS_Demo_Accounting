@@ -1,0 +1,59 @@
+﻿@if (Invoices is null || !Invoices.Any())
+{
+    <p>No invoices found.</p>
+}
+else
+{
+    
+    <InvoiceStatusFilterDDComponent @bind-FilterStatus="filterStatus"/>
+    
+    <br/>
+    
+    <InvoiceCreateRowComponent CustomerId="@CustomerId" />
+    
+    @if (filteredInvoices is null || !filteredInvoices.Any())
+    {
+        <p>No invoices found.</p>
+    }
+    else
+    { 
+    <table class="table table-striped table-hover align-middle">
+        <thead class="table-light">
+            <tr>
+                <th scope="col">Invoice ID</th>
+                <th scope="col">Customer ID</th>
+                <th scope="col">Amount</th>
+                <th scope="col">Status</th>
+                <th scope="col">Action</th>
+            </tr>
+        </thead>
+        <tbody>
+                @foreach (var invoice in filteredInvoices)
+            {
+                    <InvoiceListItemComponent Invoice="invoice"  OnInvoiceUpdated="InvoiceListItemUpdated"/>
+            }
+        </tbody>
+    </table>
+    }
+}
+
+
+@code {
+    private string filterStatus = "";
+
+    [Parameter]
+    public List<InvoiceDto>? Invoices { get; set; }
+
+    [Parameter]
+    public int CustomerId { get; set; }
+
+    private List<InvoiceDto>? filteredInvoices =>
+        string.IsNullOrWhiteSpace(filterStatus) || Invoices is null
+        ? Invoices
+        : Invoices.Where(i =>i.Status.ToString() == filterStatus).ToList();
+
+    private void InvoiceListItemUpdated()
+    {
+        StateHasChanged();
+    }
+}

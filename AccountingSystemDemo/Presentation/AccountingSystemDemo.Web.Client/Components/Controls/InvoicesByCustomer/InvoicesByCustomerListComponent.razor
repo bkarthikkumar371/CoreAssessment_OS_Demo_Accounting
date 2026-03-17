@@ -1,0 +1,38 @@
+﻿@if (Customers is null || !Customers.Any())
+{
+    <p>No customers found.</p>
+}
+else
+{
+    <NameSearchFilterComponent FilterText="Filter Customers by Name" @bind-FilterValue="filterName"/>
+    @if (filteredCustomers is null || !filteredCustomers.Any())
+    {
+        <p>No customers found.</p>
+    }
+    else
+    {
+        foreach (var customer in filteredCustomers)
+        {
+            <h3>@customer.Name - @customer.CustomerId</h3>
+            var customerInvoices = Invoices.Where(i => i.CustomerId == customer.CustomerId).ToList();
+           
+            <InvoiceListComponent Invoices="customerInvoices" CustomerId="@customer.CustomerId" />
+        } 
+    }
+}
+
+@code {
+    private string filterName = string.Empty;
+
+    [Parameter]
+    public List<CustomerDto>? Customers { get; set; }
+
+    [Parameter]
+    public List<InvoiceDto> Invoices { get; set; } = new ();
+
+    private List<CustomerDto>? filteredCustomers =>
+      string.IsNullOrWhiteSpace(filterName) || Customers is null
+          ? Customers
+          : Customers.Where(c =>
+              c.Name.Contains(filterName, StringComparison.OrdinalIgnoreCase)).ToList();
+}

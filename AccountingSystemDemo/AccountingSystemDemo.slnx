@@ -1,0 +1,24 @@
+<Solution>
+  <Folder Name="/Application/">
+    <Project Path="Application/AccountingSystemDemo.CommonApplication/AccountingSystemDemo.CommonApplication.csproj" Id="c4cf1f68-064c-490b-88f5-e0d15df48370" />
+    <Project Path="Application/AccountingSystemDemo.CustomerApplication/AccountingSystemDemo.CustomerApplication.csproj" Id="cb8cd725-a15f-403c-bd08-92a40e2514e6" />
+    <Project Path="Application/AccountingSystemDemo.InvoiceApplication/AccountingSystemDemo.InvoiceApplication.csproj" Id="83b3dce1-deec-4985-9f9b-5c8b203ac8bd" />
+  </Folder>
+  <Folder Name="/Domain/">
+    <Project Path="Domain/AccountingSystemDemo.CustomerDomain/AccountingSystemDemo.CustomerDomain.csproj" Id="ede0f85c-be43-4bc7-8e66-21a1b3c22a3a" />
+    <Project Path="Domain/AccountingSystemDemo.InvoiceDomain/AccountingSystemDemo.InvoiceDomain.csproj" Id="6a74444d-7ef6-4834-ae57-41211e67d7c6" />
+  </Folder>
+  <Folder Name="/Infrastructure/">
+    <Project Path="Infrastructure/AccountingSystemDemo.CustomerInfrastructure/AccountingSystemDemo.CustomerInfrastructure.csproj" Id="ccaead4e-3a61-433c-b305-3d1171da6817" />
+    <Project Path="Infrastructure/AccountingSystemDemo.InvoiceInfrastructure/AccountingSystemDemo.InvoiceInfrastructure.csproj" Id="d27da55e-0a9e-4611-acd3-fc3272c32d9c" />
+  </Folder>
+  <Folder Name="/Presentation/">
+    <Project Path="Presentation/AccountingSystemDemo.Api.CustomerService/AccountingSystemDemo.Api.CustomerService.csproj" />
+    <Project Path="Presentation/AccountingSystemDemo.Api.InvoiceService/AccountingSystemDemo.Api.InvoiceService.csproj" />
+    <Project Path="Presentation/AccountingSystemDemo.Api.MainService/AccountingSystemDemo.Api.MainService.csproj" />
+    <Project Path="Presentation/AccountingSystemDemo.Web.Client/AccountingSystemDemo.Web.Client.csproj" />
+  </Folder>
+  <Folder Name="/Shared/">
+    <Project Path="Shared/AccountingSystemDemo.ServiceDefaults/AccountingSystemDemo.ServiceDefaults.csproj" />
+  </Folder>
+</Solution>

@@ -1,0 +1,45 @@
+﻿@if (Customers is null || Customers.Count == 0)
+{
+    <p>No customers found.</p>
+}
+else
+{
+    <NameSearchFilterComponent FilterText="Filter Customers by Name" @bind-FilterValue="filterName"/>
+    @if (filteredCustomers is null || !filteredCustomers.Any())
+    {
+        <p>No customers found.</p>
+    }
+    else
+    {
+        <table class="table table-striped table-hover">
+            <thead class="table-light">
+                <tr>
+                    <th>CustomerId</th>
+                    <th>Name</th>
+                    <th>Email</th>
+                    <th>Phone</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var customer in filteredCustomers)
+                {
+                    <CustomerListItemComponent Customer="customer" />
+                }
+            </tbody>
+        </table>
+    }
+}
+
+
+@code {
+    private string filterName = string.Empty;
+
+    [Parameter]
+    public List<CustomerDto>? Customers { get; set; }
+
+    private List<CustomerDto>? filteredCustomers =>
+      string.IsNullOrWhiteSpace(filterName) || Customers is null
+          ? Customers
+          : Customers.Where(c =>
+              c.Name.Contains(filterName, StringComparison.OrdinalIgnoreCase)).ToList();
+}

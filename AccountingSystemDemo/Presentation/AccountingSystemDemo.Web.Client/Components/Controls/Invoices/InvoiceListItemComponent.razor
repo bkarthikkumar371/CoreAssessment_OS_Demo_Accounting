@@ -1,0 +1,85 @@
+﻿@inject IApiService ApiService;
+@inject IJSRuntime JS;
+
+@if (Invoice is not null)
+{
+    <tr class="align-middle">
+        <td>@Invoice.InvoiceId</td>
+        <td class="text-secondary">@Invoice.CustomerId</td>
+        <td class="fw-bold">@Invoice.Amount.ToString("C")</td>
+        @switch (Invoice.Status)
+    {
+        case InvoiceStatusEnum.Submitted:
+                <td>
+                    <span class="text-warning">
+                        Submitted
+                    </span>
+                </td>
+                <td>
+                    <button class="btn btn-sm btn-success" @onclick="() => updateStatus(InvoiceStatusEnum.Approved)" disabled="@updateProcessing" >
+                        Approve
+                    </button>
+                    <button class="btn btn-sm btn-danger" @onclick="() => updateStatus(InvoiceStatusEnum.Rejected)" disabled="@updateProcessing">
+                        Reject
+                    </button>
+                </td>
+            break;
+        case InvoiceStatusEnum.Approved:
+                <td>
+                    <span class="text-success">
+                        Approved
+                    </span>
+                </td>
+                <td>
+                    <button class="btn btn-sm btn-success" @onclick="() => updateStatus(InvoiceStatusEnum.Paid)" disabled="@updateProcessing">
+                        Mark as Paid
+                    </button>
+                </td>
+            break;
+        case InvoiceStatusEnum.Rejected:
+                <td>
+                    <span class="text-danger">
+                        Rejected
+                    </span>
+                </td>
+                <td/>
+            break;
+        case InvoiceStatusEnum.Paid:
+                <td>
+                    <span class="text-muted">
+                        Paid
+                    </span>
+                </td>
+                <td/>
+                break;
+    }
+    </tr>
+}
+
+@code {
+    [Parameter]
+    public InvoiceDto? Invoice { get; set; }
+
+    [Parameter]
+    public EventCallback OnInvoiceUpdated { get; set; }
+
+    private bool updateProcessing = false;
+    private async Task updateStatus(InvoiceStatusEnum newStatus)
+    {
+        updateProcessing = true;
+        if (Invoice is not null)
+        {
+            var result = await ApiService.UpdateInvoiceStatus(Invoice.InvoiceId, newStatus);
+            if (result is not null)
+            {
+                Invoice.Status = result.Status;
+                await OnInvoiceUpdated.InvokeAsync();
+            }
+            else
+            {
+                await JS.InvokeVoidAsync("alert", "Update failed.");
+            }
+        }
+        updateProcessing = false;
+    }
+}

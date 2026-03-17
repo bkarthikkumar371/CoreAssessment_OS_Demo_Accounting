@@ -1,0 +1,24 @@
+﻿<div class="d-flex align-items-center my-3">
+    <label class="fw-bold me-2">@FilterText:</label>
+    <input type="text" class="form-control w-25"
+           value="@FilterValue"
+           @oninput="OnInputChanged"
+           placeholder="Search..." />
+</div>
+
+@code {
+    [Parameter]
+    public string? FilterText { get; set; }
+
+    [Parameter] 
+    public string? FilterValue { get; set; }
+    
+    [Parameter] 
+    public EventCallback<string> FilterValueChanged { get; set; }
+
+    private async Task OnInputChanged(ChangeEventArgs e)
+    {
+        FilterValue = e.Value?.ToString();
+        await FilterValueChanged.InvokeAsync(FilterValue);
+    }
+}

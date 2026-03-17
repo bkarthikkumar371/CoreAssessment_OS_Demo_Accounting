@@ -1,0 +1,46 @@
+﻿@page "/customerinvoices"
+
+@inject IApiService ApiService
+
+<PageTitle>Invoices By Customer</PageTitle>
+
+<h1>Customer List</h1>
+
+<br />
+<br />
+
+@if (isLoading)
+{
+    <p>Loading invoices...</p>
+}
+else
+{
+    <CascadingValue Value="this">
+        <InvoicesByCustomerListComponent invoices="invoices" customers="customers" />
+    </CascadingValue>
+}
+
+@code {
+    private List<InvoiceDto> invoices = new();
+    private List<CustomerDto> customers = new();
+    private bool isLoading = true;
+
+    protected override async Task OnInitializedAsync()
+    {
+        
+        var invoicesTask = ApiService.GetAllInvoices();
+        var customersTask = ApiService.GetCustomers();
+
+        await Task.WhenAll(invoicesTask, customersTask);
+
+        invoices = invoicesTask.Result;
+        customers = customersTask.Result;
+
+        isLoading = false;
+    }
+    public async Task RefreshInvoices()
+    {
+        invoices = await ApiService.GetAllInvoices();
+        StateHasChanged();
+    }
+}

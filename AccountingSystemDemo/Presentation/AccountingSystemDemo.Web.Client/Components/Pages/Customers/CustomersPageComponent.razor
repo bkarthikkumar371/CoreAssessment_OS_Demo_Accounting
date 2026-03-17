@@ -1,0 +1,28 @@
+﻿@page "/customers"
+
+@inject IApiService apiService
+
+<PageTitle>Customers</PageTitle>
+
+<h1>Customer List</h1>
+
+
+@if (isLoading)
+{
+    <p>Loading customers...</p>
+}
+else
+{
+    <CustomerListComponent customers="customers" />
+}
+
+@code {
+    private List<CustomerDto> customers = new();
+    private bool isLoading = true;
+    
+    protected override async Task OnInitializedAsync()
+    {
+        customers = await apiService.GetCustomers();
+        isLoading = false;
+    }
+}

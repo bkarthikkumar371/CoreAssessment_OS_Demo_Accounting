@@ -1,0 +1,36 @@
+﻿@using System.Text.RegularExpressions
+@if (Customer is not null)
+{
+    <tr class="align-middle">
+        <td>@Customer.CustomerId</td>
+        <td class="fw-bold">@Customer.Name</td>
+        <td>
+            <a href="mailto:@Customer.Email" class="text-decoration-none">
+                @Customer.Email
+            </a>
+        </td>
+        <td>
+            @FormatPhoneRegex(Customer.PhoneNumber)
+        </td>
+    </tr>
+
+}
+
+@code {
+    [Parameter]
+    public CustomerDto? Customer { get; set; }
+
+    private string FormatPhoneRegex(string? phone)
+    {
+        if (string.IsNullOrWhiteSpace(phone)) return string.Empty;
+
+        string digits = Regex.Replace(phone, @"\D", "");
+        if (digits.Length == 10)
+        {
+            return Regex.Replace(digits, @"(\d{3})(\d{3})(\d{4})", "($1) $2-$3");
+        }
+
+        return phone; 
+    }
+
+}

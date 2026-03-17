@@ -1,0 +1,76 @@
+﻿@using AccountingSystemDemo.Web.Client.Components.Pages.Invoices
+@using AccountingSystemDemo.Web.Client.Components.Pages.InvoicesByCustomer
+@inject IApiService apiService
+@inject IJSRuntime JS;
+
+<button class="btn btn-primary" @onclick="AddNewInvoice">
+    <i class="bi bi-plus-lg"></i> Add New Invoice
+</button>
+
+@if (isAdding)
+{
+    <table class="table table-hover align-middle">
+        <thead class="table-light">
+            <tr>
+                <th>CustomerId</th>
+                <th>Amount</th>
+                <th>Status</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+       
+            <tr class="table-info">
+                <td>
+                    <input class="form-control" @bind="newInvoice.CustomerId" disabled="@isCustomerIdSet" />
+                </td>
+                <td><input type="number" class="form-control" @bind="newInvoice.Amount" /></td>
+                <td> New </td>
+                <td>
+                    <button class="btn btn-sm btn-success" @onclick="SaveInvoice">Add New</button>
+                    <button class="btn btn-sm btn-link text-danger" @onclick="() => isAdding = false">Cancel</button>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+}
+
+@code {
+    private bool isAdding = false;
+    private CreateInvoiceDto newInvoice = new();
+
+    [Parameter] 
+    public int CustomerId { get; set; }
+
+    private bool isCustomerIdSet => CustomerId != 0;
+
+    [CascadingParameter] 
+    public InvoicesPageComponent? InvoicesPageComponent { get; set; }
+
+    [CascadingParameter]
+    public InvoicesByCustomerPageComponent? InvoicesByCustomerPageComponent { get; set; }
+
+    private void AddNewInvoice()
+    {
+        isAdding = true;
+        newInvoice.CustomerId = CustomerId;
+    }
+
+    private async Task SaveInvoice()
+    {
+
+        var response = await apiService.CreateInvoice(newInvoice);
+        if (response is null || response.InvoiceId <= 0)
+              await JS.InvokeVoidAsync("alert", "Invoice creation failed.");
+
+        if (InvoicesByCustomerPageComponent is not null)
+            await InvoicesByCustomerPageComponent.RefreshInvoices();
+
+        if (InvoicesPageComponent is not null)
+            await InvoicesPageComponent.RefreshInvoices();
+
+        await JS.InvokeVoidAsync("alert", "Invoice created successfully.");
+
+        isAdding = false; // Hide row after save
+    }
+}
